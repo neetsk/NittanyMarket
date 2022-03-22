@@ -3,6 +3,9 @@ import sqlite3 as sql
 def populate():
     con = sql.connect("NittanyMarket.db")
 
+    alphabet = ['abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ']
+    digits = ['0123456789']
+
     '''Drop Tables'''
     # Drop Tables for testing purposes
     con.execute('''DROP TABLE IF EXISTS Users''')
@@ -87,15 +90,47 @@ def populate():
         FOREIGN KEY (email) REFERENCES Users)''')
 
     # Categories Table
-    con.execute('''''')
+    con.execute('''CREATE TABLE IF NOT EXISTS Categories
+    (parent_category TEXT,
+    category_name TEXT,
+    PRIMARY KEY (category_name))''')
 
     # Product_Listings Table
-
+    con.execute('''CREATE TABLE IF NOT EXISTS Product_Listings
+    (seller_email TEXT,
+    listing_ID INTEGER,
+    category TEXT,
+    title TEXT,
+    product_name TEXT,
+    product_description TEXT,
+    price TEXT,
+    quantity INTEGER,
+    PRIMARY KEY (seller_email, listing_ID))''')
 
     # Orders Table
-
+    con.execute('''CREATE TABLE IF NOT EXISTS Orders
+    (transaction_ID INTEGER,
+    seller_email TEXT,
+    listing_ID INTEGER,
+    buyer_email TEXT,
+    date DATE,
+    quantity INTEGER
+    payment INTEGER,
+    PRIMARY KEY (transaction_ID))''')
 
     # Reviews Table
-
+    con.execute('''CREATE TABLE IF NOT EXISTS Reviews
+        (buyer_email TEXT,
+        seller_email TEXT,
+        listing_ID INTEGER,
+        review_desc TEXT,
+        PRIMARY KEY (buyer_email, seller_email, listing_ID))''')
 
     # Rating Table
+    con.execute('''CREATE TABLE IF NOT EXISTS Rating
+        (buyer_email TEXT,
+        seller_email TEXT,
+        date DATE,
+        rating INTEGER,
+        rating_desc TEXT,
+        PRIMARY KEY (buyer_email, seller_email, date))''')
