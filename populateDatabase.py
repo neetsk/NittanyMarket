@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import hashlib
 import csv
 
 def populate():
@@ -159,6 +160,8 @@ def populate():
     file = open('NittanyMarketDataset-Final/Users.csv')
     contents = list(csv.reader(file))
     contents = contents[1:]
+    for x in contents:
+        x[1] = hashlib.sha256(x[1].encode('utf-8')).hexdigest()
     cur.executemany(insert_users, contents)
 
     # Populate Buyers Table
