@@ -1,0 +1,22 @@
+Python Files
+NittanyMarket.py
+-Calls function to populate the database
+-Runs the flask server with webpages
+-WEBPAGES HAVE ERRORS THAT WILL BE FIXED FOR REVIEW
+
+populateDatabase.py
+-Creates Tables with given constraints
+-Populates tables with test data given
+
+CSV Files (NittanyMarketDataset-Final)
+-CSV Files used to as test data to populate the database
+
+Database Files (NittanyMarket.db)
+-Database file containing the 12 given tables populated with data from the populateDatabase.py file
+
+HTML Files
+BOTH FILES WILL BE FIXED FOR PROGRESS REVIEW
+index.html
+- Shows the webpage to login and send a get request
+logincomplete.html
+- Shows if the login from index.html is valid

@@ -1,11 +1,20 @@
 from flask import Flask, render_template, request
 import sqlite3 as sql
 from populateDatabase import populate
+import hashlib
 
 # Populates Database with starting data
 populate()
 
 '''
+connection = sql.connect('NittanyMarket.db')
+password = hashlib.sha256("test".encode('utf-8')).hexdigest()
+string = "SELECT COUNT(1) FROM Users WHERE email=? AND password=?"
+cursor = connection.execute(string, ["ijoijoifjsd","9057bc90227bb3025b8e2a4049763407678525e5165192e463c27871af3f2893"])
+print(cursor.fetchall())
+'''
+
+
 app = Flask(__name__)
 
 host = 'http://127.0.0.1:5000/'
@@ -18,15 +27,31 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/insertuser')
+@app.route('/logincomplete', methods=['POST', 'GET'])
 def index2():
-    return render_template('index.html')
+    error = None
+    data = request.args.get('User')
+    print(data)
+    if request.method == 'POST':
+        result = None
+        #result = valid_login(request.form['User'], request.form['Pass'])
+        if result:
+            return render_template('logincomplete.html')
+        else:
+            error = 'login failed'
+    return render_template('logincomplete.html', error=error)
 
+def valid_login(user, password):
+    connection = sql.connect('NittanyMarket.db')
+    password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    string = "SELECT COUNT(1) FROM Users WHERE email=? AND password=?"
+    cursor = connection.execute(string, [user, password])
+    return cursor.fetchall()
 
 if __name__ == "__main__":
     app.run()
 
-'''
+
 
 #Drop tables so program can be reloaded
 #and duplicate values are not loaded
