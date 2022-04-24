@@ -12,6 +12,10 @@ host = 'http://127.0.0.1:5000/'
 
 con = sql.connect("NittanyMarket.db")
 
+#TEST LOGIN
+#User: arubertelli0@nsu.edu
+#Pass: TbIF16hoUqGl
+
 
 @app.route('/')
 def index():
@@ -22,15 +26,33 @@ def index():
 @app.route('/logincomplete', methods=['POST', 'GET'])
 def index2():
     error = None
-    content_type = request.headers.get('Content-Type')
+    content_type = request.headers.get('Content-Type') #content type check to see if its normal one sent vs json
     if (content_type == 'application/x-www-form-urlencoded'):
         if request.method == 'POST':
-            result = valid_login(request.form['userid'], request.form['password'])
-            if result[0] == 1:
-                return render_template('logincomplete.html')
+            result = valid_login(request.form['userid'], request.form['password']) #calls valid login
+            if result[0] == 1: #if we have a user and pass that match, successfully login
+                #return render_template('logincomplete.html')
+                return render_template('profile.html')
             else:
                 error = 'login failed'
-    return render_template('loginfailed.html', error=error)
+    return render_template('loginfailed.html', error=error) #we didnt have a password and user that match so we fail login with error=loginfailed
+
+
+@app.route('/profile', methods=['GET'])
+def index3():
+    #if user not logged in send them to login
+    if (False):
+        None=None
+    #else display user profile
+    else: 
+        #fetch profile data
+        data = fetch_profile_data()
+        #pass data under return
+    return render_template('profile.html', data=data)
+
+
+def fetch_profile_data():
+    return True
 
 
 def valid_login(user, password):
@@ -39,6 +61,7 @@ def valid_login(user, password):
     string = "SELECT COUNT(1) FROM Users WHERE email=? AND password=?"
     cursor = connection.execute(string, [user, password])
     return cursor.fetchone()
+
 
 if __name__ == "__main__":
     app.run()
