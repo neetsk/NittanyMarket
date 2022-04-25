@@ -1,0 +1,26 @@
+webpage list
+/
+/login
+/profile
+/logout
+
+============================================================================================
+html form list
+login.html - used to login, displays error if login fails
+profile.html - displays profile page, allows for password change
+logout.html - displays successful logout with a button to return to login
+
+updatepassword.html?? 
+
+============================================================================================
+/ 
+redirect to login.html page if not logged in o.w. redirect to profile.html page
+
+/login 
+render login.html page if not logged in o.w. redirect to profile.html page
+
+/profile
+render login.html page if not logged in o.w. render profile.html page
+
+/logout
+render login.html page if not logged in o.w. show logout.html
