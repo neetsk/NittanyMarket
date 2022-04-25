@@ -19,16 +19,12 @@
                 <table align = "center" border="0" width="300">
                     {% if changePassAttempt == True %}
                         <tr>
-                            <td>Successful change!</td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td>Something Invalid #FIX</td>
+                            <td>{{attemptSuccess}}</td>
                         </tr>
                     {% endif %}
                     <tr> <!--tr is a table row that holds data inside table cells (td)-->
                         <td>Current Password</td>
-                        <td><input type="text" name="userid" size="20"></td>
+                        <td><input type="text" name="currentpassword" size="20"></td>
                     </tr>
                     <tr>
                         <td>New Password</td>

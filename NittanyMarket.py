@@ -12,13 +12,11 @@ app.config["SECRET_KEY"] = "7c90dc90568ad551eb574e4b7a3d86ab08ab771351d6fa858fb2
 
 host = 'http://127.0.0.1:5000/'
 
-con = sql.connect("NittanyMarket.db")
-
 #RUN APPLICATION inside | lines || & C:/Python310/python.exe c:/Users/minij/Desktop/NittanyMarket/NittanyMarket.py||
 
 #TEST LOGIN
 #User: arubertelli0@nsu.edu
-#Pass: TbIF16hoUqGl
+#Pass: 123
 
 '''Redirects to Profile if logged in or Login o.w.'''
 @app.route('/')
@@ -35,6 +33,11 @@ def index():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     error = None
+
+    # If we are logged in, redirect to user's profile
+    if "username" in session:
+        return redirect(url_for('userProfile'))
+
     # If our method is a GET request, render the login page
     # If our method is a POST request, validate the login
     if request.method == 'GET': 
@@ -49,10 +52,10 @@ def login():
     return render_template('loginfailed.html', error=error)
 
 
-#@app.route('/profile/<username>, methods=['GET','POST']')
 '''Redirects to Login if not logged in or renders the Profile page o.w.'''
 @app.route('/profile', methods=['GET', 'POST'])
 def userProfile():
+    error = None
     # If we are not logged in, redirect to the login page
     if "username" not in session:
         return redirect(url_for('login'))
@@ -61,50 +64,49 @@ def userProfile():
     data = fetch_profile_data(session["username"]) 
 
     if request.method == 'GET':
-        #render webpage
-        test = None
+        return render_template('profile.html', data=data, changePassAttempt=False, attemptSuccess=None)
+    # Method is a POST so we attempt to change the password
     else:
-        #post method means attempted password change
-        #if it worked
-        changePassAttempt = True
-        #if change failed
-        #changePassAttempt = False
-    #pass data under return
-    
-    return render_template('profile.html', data=data, changePassAttempt=changePassAttempt)
+        attemptSuccess = valid_password_change(request.form['currentpassword'], request.form['newpassword'], request.form['newpasswordretype'])
+        return render_template('profile.html', data=data, changePassAttempt=True, attemptSuccess=attemptSuccess)
 
+
+'''Redirects to login page if already logged out or successfully logs out o.w.'''
 @app.route('/logout')
 def logout():
+    # If we are not logged in, redirect to the login page
     if "username" not in session:
         return redirect(url_for('login'))
 
+    # Once logged out, remove the user from the session
     session.pop("username", None)
+    #we should instead display logout complete
     return redirect(url_for('index'))
 
 
+'''Fetch user profile data for display on the profile page'''
 def fetch_profile_data(user):
     connection = sql.connect('NittanyMarket.db')
     
     string = "SELECT * FROM Buyers WHERE email=?"
     cursor = connection.execute(string, [user])
-    tempdata = cursor.fetchone()
-    # example result ('arubertelli0@nsu.edu', 'Ileana', 'Ziehms', 'Female', 49, 
-    # 'bbeb14f144684b76b5322bdee24f8c76', '63f97e32f7894bd0bc43d113a431cb9b')
+    personalData = cursor.fetchone()
 
     string = "SELECT zipcode, street_num, street_name FROM Address WHERE address_id=?"
-    cursor = connection.execute(string, [tempdata[5]])
-    temphomeadd = cursor.fetchone()
+    cursor = connection.execute(string, [personalData[5]])
+    homeAddressData = cursor.fetchone()
 
-    cursor = connection.execute(string, [tempdata[6]])
-    tempbillingadd = cursor.fetchone()
+    cursor = connection.execute(string, [personalData[6]])
+    billingAddressData = cursor.fetchone()
 
     string = "SELECT SUBSTRING(credit_card_num, 16, 4) FROM Credit_Cards WHERE Owner_email=?"
     cursor = connection.execute(string, [user])
-    lastfourdigit = cursor.fetchone()
+    lastFourDigit = cursor.fetchone()
 
-    return tempdata + temphomeadd + tempbillingadd + lastfourdigit
+    return personalData + homeAddressData + billingAddressData + lastFourDigit
 
 
+'''Validate login by querying the database'''
 def valid_login(user, password):
     connection = sql.connect('NittanyMarket.db')
     password = hashlib.sha256(password.encode('utf-8')).hexdigest()
@@ -113,26 +115,26 @@ def valid_login(user, password):
     return cursor.fetchone()
 
 
+'''Validate Changed Password by quering the database'''
+def valid_password_change(currentPassword, newPassword, newPasswordRetype):
+    connection = sql.connect('NittanyMarket.db')
+
+    if newPassword != newPasswordRetype:
+        return 'Passwords do not match'
+    
+    hashedCurrentPass = hashlib.sha256(currentPassword.encode('utf-8')).hexdigest()
+    string = "SELECT COUNT(1) FROM Users WHERE email=? AND password=?"
+    cursor = connection.execute(string, [session['username'], hashedCurrentPass])
+
+    if cursor.fetchone()[0] == 1:
+        hashedNewPass = hashlib.sha256(newPassword.encode('utf-8')).hexdigest()
+        string = "UPDATE Users SET password=? WHERE email=? AND password=?"
+        cursor = connection.execute(string, [hashedNewPass, session['username'], hashedCurrentPass])
+        connection.commit()
+        return 'Password successfully updated'
+    else:
+        return 'Incorrect password entered'
+
+
 if __name__ == "__main__":
     app.run()
-
-"""
-#use args for get and form for post
-@app.route('/logincomplete', methods=['POST', 'GET'])
-def index2():
-    if "username" in session:
-        return render_template('logincomplete.html')
-
-    error = None
-    content_type = request.headers.get('Content-Type') #content type check to see if its normal one sent vs json
-    if (content_type == 'application/x-www-form-urlencoded'):
-        if request.method == 'POST':
-            result = valid_login(request.form['userid'], request.form['password']) #calls valid login
-            if result[0] == 1: #if we have a user and pass that match, successfully login
-                session["username"] = request.form['userid'] #adds user to session
-                return render_template('logincomplete')
-                #return render_template('profile.html')
-            else:
-                error = 'login failed'
-    return render_template('loginfailed.html', error=error) #we didnt have a password and user that match so we fail login with error=loginfailed
-"""
