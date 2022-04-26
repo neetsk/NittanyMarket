@@ -1,3 +1,4 @@
+from email import header
 from os import curdir
 from flask import Flask, redirect, render_template, request, session, url_for
 import sqlite3 as sql
@@ -5,7 +6,7 @@ from populateDatabase import populate
 import hashlib
 
 # Populates Database with starting data
-# populate()
+#populate()
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -88,31 +89,68 @@ def logout():
 '''Shows the product listings page and adjusts features based on if a user is logged in or not and if they are a seller'''
 @app.route('/productlistings', methods=['GET', 'POST'])
 def productlistings():
-    #Find all categories
-        #Find root categories
-    headCategory = 'Root'
+
+    print(request.form)
+
+    subCategoryList = []
+    fullCategoryList = []
+    productList = []
+
+    if request.method == 'GET':
+        headCategory = 'Root'
+        subCategoryList.append('Root')
+        fullCategoryList.append('Root')
     if request.method == 'POST':
-        headCategory = request.form['Category']
-    
+        if 'Reset' in request.form:
+            headCategory = 'Root'
+        else:
+            headCategory = request.form['Category']
+        subCategoryList.append(headCategory)
+        fullCategoryList.append(headCategory)
+   
     connection = sql.connect('NittanyMarket.db')
-
-    categoryList = []
-    categoryList.append(headCategory)
-
-    for item in categoryList:
-        string = "SELECT * FROM Categories WHERE parent_category=?"
-        cursor = connection.execute(string, [item])
-        tempData = cursor.fetchall()
-        for x in tempData:
-            categoryList.append(x[1])
-        #print(tempData)
-
-    #print(categoryList)
-    if 'Root' in categoryList:
-        categoryList.remove('Root')
     
-    return render_template('productlistings.html', headCategory=headCategory, categoryList=categoryList)
+    string = "SELECT * FROM Categories WHERE parent_category=?"
+    cursor = connection.execute(string, [headCategory])
+    subCategory = cursor.fetchall()
 
+    for x in subCategory:
+        subCategoryList.append(x[1])
+        fullCategoryList.append(x[1])
+
+    if headCategory in subCategoryList:
+        subCategoryList.remove(headCategory)
+        fullCategoryList.remove(headCategory)
+
+    for x in fullCategoryList:
+        string = "SELECT * FROM Categories WHERE parent_category=?"
+        cursor = connection.execute(string, [x])
+        subCategory = cursor.fetchall()
+        for y in subCategory:
+            fullCategoryList.append(y[1])
+
+    if headCategory != 'Root':  
+        fullCategoryList.append(headCategory)
+
+    print(fullCategoryList)
+
+    
+    for x in fullCategoryList:
+        string = "SELECT * FROM Product_Listings WHERE category=?"
+        cursor = connection.execute(string, [x])
+        queryResult = cursor.fetchall()
+        
+        for y in queryResult:
+            productList.append(y)
+
+    return render_template('productlistings.html', headCategory=headCategory, categoryList=subCategoryList, productList=productList)
+
+
+'''Shows the product page information and allows buyers to purchase the product'''
+@app.route('/product', methods=['GET', 'POST'])
+def productlistings():
+    return render_template('product.html')
+    
 
 '''Fetch user profile data for display on the profile page'''
 def fetch_profile_data(user):

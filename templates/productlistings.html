@@ -24,31 +24,20 @@
     <label for="Category">Choose a Category:</label>
     <form method="POST">
         <select name="Category" id="Category">
-            <!--<ul>
-                {% for item in data %}
-                    <li>{{item}}</li>
-                {% endfor %}
-            </ul>-->
-                {% for item in categoryList %}
-                    <!--{% if headCategory != 'Root' %}
-                        <optgroup label="{{headCategory}}">
-
-                        </optgroup>
-                    {% endif %}-->
-                    <option value="{{item}}">{{item}}</option>
-
-                    <!--<optgroup label="Swedish Cars">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                    </optgroup>
-                    <optgroup label="German Cars">
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                    </optgroup>-->
-                {% endfor %}
+            {% for item in categoryList %}
+                <option value="{{item}}">{{item}}</option>
+            {% endfor %}
         </select>
-        <input type="submit" value="Update">
+        <input type="submit" name="Filter" value="Filter">
+        <input type="submit" name="Reset" value="Reset">
     </form>
+    {% for product in productList %}
+        <p><b>Seller Email:</b> {{product[0]}} <b>Listing_ID</b> {{product[1]}} <b>Category:</b> {{product[2]}} <b>Title:</b> {{product[3]}} 
+            <b>Product Name:</b> {{product[4]}} <b>Product Description:</b> {{product[5]}} <b>Price:</b> {{product[6]}} <b>Quantity</b> {{product[7]}}</p>
+        <form method="POST" action="/product">
+            <input type="submit" name="{{product[1]}}" value="View">
+        </form>
+    {% endfor %}
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
