@@ -229,9 +229,68 @@ def publishproductlisting():
     if 'seller' not in session:
         return redirect(url_for('userProfile'))
 
-    
+    if request.method == 'POST':
+        # Error checking Entries
+        if request.form['category'] == '':
+            error = 'Enter a Category'
+        elif request.form['title'] == '':
+            error = 'Enter a Title'
+        elif request.form['productname'] == '':
+            error = 'Enter a Product Name'
+        elif request.form['productdescription'] == '':
+            error = 'Enter a Product Description'
+        elif request.form['price'] == '':
+            error = 'Enter a Price'
+        elif not request.form['price'].isdigit():
+            error = 'Price Invalid'
+        elif int(request.form['price']) < 1:
+            error = 'Price Invalid'
+        elif request.form['quantity'] == '':
+            error = 'Enter a Quantity'
+        elif not request.form['quantity'].isdigit():
+            error = 'Quantity Invalid'
+        elif int(request.form['quantity']) < 1:
+            error = 'Quantity Invalid'
 
-    return True
+        connection = sql.connect('NittanyMarket.db')
+        
+        # Check if the email is valid
+        string = "SELECT COUNT(1) FROM Users WHERE email=?"
+        cursor = connection.execute(string, [session['username']])
+        emailExists = cursor.fetchone()[0]
+        string = "SELECT COUNT(1) FROM Sellers WHERE email=?"
+        cursor = connection.execute(string, [session['username']])
+        sellerExists = cursor.fetchone()[0]
+        if emailExists == 0 or sellerExists == 0:
+            error = 'User is not authorized'
+        
+        # If we have no errors, commit to the database
+        if error == None:
+            print('ADDING')
+            # Check if the category exists
+            string = "SELECT * FROM Categories WHERE category_name=?"
+            cursor = connection.execute(string, [request.form['category']])
+            result = cursor.fetchone()
+            if result == None:
+                string = '''INSERT INTO Categories (parent_category, category_name) VALUES (?,?)'''
+                cursor = connection.execute(string, ['Root', request.form['category']])
+
+            # Generating a new ID
+            string = '''SELECT MAX(listing_ID) FROM Product_Listings'''
+            cursor = connection.execute(string)
+            maxID = cursor.fetchone()[0]
+
+            # Inserting new Product into DB
+            string = '''INSERT INTO Product_Listings (seller_email, listing_ID, category, title, 
+                product_name, product_description, price, quantity) VALUES (?,?,?,?,?,?,?,?)'''
+            cursor = connection.execute(string, [session['username'], maxID + 1, request.form['category'], request.form['title'], 
+                request.form['productname'], request.form['productdescription'], request.form['price'], request.form['quantity']])
+            
+            # Commit Changes
+            connection.commit()
+            error='Successful'
+
+    return render_template('publishproductlisting.html', userLoggedIn=True, userIsSeller=True, error=error)
 
 
 '''Fetch user profile data for display on the profile page'''

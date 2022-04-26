@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title></title>
+</head>
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-default bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="productlistings">Product Listings</a>
+                {% if userIsSeller == True %}
+                    <a class="navbar-brand" href="publishproductlisting">Publish Product Listing</a>
+                {% endif %}
+            </div>
+            {% if userLoggedIn == True %}
+            <div class="navbar-header-right">
+                <a style="text-align: right;" class="navbar-brand" href="profile">Profile</a>
+                <a style="text-align: right;" class="navbar-brand" href="logout">Logout</a>
+            </div>
+            {% else %}
+            <div class="navbar-header-right">
+                <a style="text-align: right;" class="navbar-brand" href="login">Login</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="publishproductlisting.html website">
+        <div>
+            <!--Seller_Email,Listing_ID,Category,Title,Product_Name,Product_Description,Price,Quantity
+            cur.execute('''CREATE TABLE IF NOT EXISTS Product_Listings
+            (seller_email TEXT NOT NULL,
+        listing_ID INTEGER NOT NULL,
+        category TEXT NOT NULL,
+        title TEXT NOT NULL,
+        product_name TEXT NOT NULL,
+        product_description TEXT NOT NULL,
+        price TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
+        PRIMARY KEY (seller_email, listing_ID))''')-->
+        <form method="POST" action="/publishproductlisting">
+            <table align = "center" border="0" width="300">
+              <tr>
+                <td>Category</td>
+                <td><input type="text" name="category" size="20"></td>
+              </tr>
+              <tr>
+                <td>Title</td>
+                <td><input type="text" name="title" size="20"></td>
+              </tr>
+              <tr>
+                <td>Product Name</td>
+                <td><input type="text" name="productname" size="20"></td>
+              </tr>
+              <tr>
+                <td>Description</td>
+                <td><input type="text" name="productdescription" size="20"></td>
+              </tr>
+              <tr>
+                <td>Price</td>
+                <td><input type="text" name="price" size="20"></td>
+              </tr>
+              <tr>
+                <td>Quantity</td>
+                <td><input type="text" name="quantity" size="20"></td>
+              </tr>
+                <tr>
+                <td></td>
+                <td align = "center"><input type="submit" value="Submit"
+                  name="submit"></td>
+              </tr>
+              {% if error != None %}
+                  <tr>
+                    <td>{{error}}</td>
+                  </tr>
+              {% elif error == 'Successful' %}
+                  <tr>
+                    <td>Addition Successful!</td>
+                  </tr>
+              {% endif %}
+            </table>
+          </form> 
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>

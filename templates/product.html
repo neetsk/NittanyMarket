@@ -33,9 +33,15 @@
     <div class="product.html website">
         <div>
             <ul>
-                {% for item in data %}
-                    <li>{{item}}</li>
-                {% endfor %}
+                <p>Seller Email: {{data[0]}}</p>
+                <p>Listing_ID: {{data[1]}}</p>
+                <p>Category: {{data[2]}}</p>
+                <p>Title: {{data[3]}}</p>
+                <p>Product Name: {{data[4]}}</p>
+                <p>Product Description: {{data[5]}}</p>
+                <p>Price: {{data[6]}}</p>
+                <p>Quantity: {{data[7]}}</p>
+               
             </ul>
         </div>
     </div>

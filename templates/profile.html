@@ -34,9 +34,20 @@
     <div class="profile.html website">
         <div>
             <ul>
-                {% for item in data %}
-                    <li>{{item}}</li>
-                {% endfor %}
+                <p>Email: {{data[0]}}</p>
+                <p>First Name: {{data[1]}}</p>
+                <p>Last Name: {{data[2]}}</p>
+                <p>Gender: {{data[3]}}</p>
+                <p>Age: {{data[4]}}</p>
+                <p>Home Address ID: {{data[5]}}</p>
+                <p>Home Address Zipcode: {{data[7]}}</p>
+                <p>Home Address Street Number: {{data[8]}}</p>
+                <p>Home Address Street Name: {{data[9]}}</p>
+                <p>Billing Address ID: {{data[6]}}</p>
+                <p>Billing Address Zipcode: {{data[10]}}</p>
+                <p>Billing Address Street Number: {{data[11]}}</p>
+                <p>Billing Address Street Name: {{data[12]}}</p>
+                <p>Credit Card: XXXX-XXXX-XXXX-{{data[13]}}</p>
             </ul>
             <form method="POST" action="/profile">
                 <table align = "center" border="0" width="300">
