@@ -1,3 +1,4 @@
+from os import curdir
 from flask import Flask, redirect, render_template, request, session, url_for
 import sqlite3 as sql
 from populateDatabase import populate
@@ -85,9 +86,32 @@ def logout():
 
 
 '''Shows the product listings page and adjusts features based on if a user is logged in or not and if they are a seller'''
-@app.route('/productlistings')
+@app.route('/productlistings', methods=['GET', 'POST'])
 def productlistings():
-    return render_template('productlistings.html')
+    #Find all categories
+        #Find root categories
+    headCategory = 'Root'
+    if request.method == 'POST':
+        headCategory = request.form['Category']
+    
+    connection = sql.connect('NittanyMarket.db')
+
+    categoryList = []
+    categoryList.append(headCategory)
+
+    for item in categoryList:
+        string = "SELECT * FROM Categories WHERE parent_category=?"
+        cursor = connection.execute(string, [item])
+        tempData = cursor.fetchall()
+        for x in tempData:
+            categoryList.append(x[1])
+        #print(tempData)
+
+    #print(categoryList)
+    if 'Root' in categoryList:
+        categoryList.remove('Root')
+    
+    return render_template('productlistings.html', headCategory=headCategory, categoryList=categoryList)
 
 
 '''Fetch user profile data for display on the profile page'''

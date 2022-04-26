@@ -22,24 +22,33 @@
     </nav>
 
     <label for="Category">Choose a Category:</label>
+    <form method="POST">
+        <select name="Category" id="Category">
+            <!--<ul>
+                {% for item in data %}
+                    <li>{{item}}</li>
+                {% endfor %}
+            </ul>-->
+                {% for item in categoryList %}
+                    <!--{% if headCategory != 'Root' %}
+                        <optgroup label="{{headCategory}}">
 
-    <select name="Category" id="Category">
-        <ul>
-            {% for item in data %}
-                <li>{{item}}</li>
-            {% endfor %}
-        </ul>
+                        </optgroup>
+                    {% endif %}-->
+                    <option value="{{item}}">{{item}}</option>
 
-        {% for item in categories %}
-        <optgroup label="Swedish Cars">
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-        </optgroup>
-        <optgroup label="German Cars">
-            <option value="mercedes">Mercedes</option>
-            <option value="audi">Audi</option>
-        </optgroup>
-    </select>
+                    <!--<optgroup label="Swedish Cars">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                    </optgroup>
+                    <optgroup label="German Cars">
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </optgroup>-->
+                {% endfor %}
+        </select>
+        <input type="submit" value="Update">
+    </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
