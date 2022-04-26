@@ -8,52 +8,39 @@
     <title></title>
 </head>
 <body>
+<div class="container-sm">
     <!--Navbar-->
     <nav class="navbar navbar-default bg-dark">
         <div class="container-fluid">
             <div class="navbar-header">
               <a class="navbar-brand" href="productlistings">Product Listings</a>
+              <!--Add a check to see if a user is logged in-->
               <a class="navbar-brand" href="profile">Profile</a>
               <a class="navbar-brand" href="logout">Logout</a>
             </div>
         </div>
     </nav>
 
-    <div class="profile.html website">
-        <div>
-            <ul>
-                {% for item in data %}
-                    <li>{{item}}</li>
-                {% endfor %}
-            </ul>
-            <form method="POST" action="/profile">
-                <table align = "center" border="0" width="300">
-                    {% if changePassAttempt == True %}
-                        <tr>
-                            <td>{{attemptSuccess}}</td>
-                        </tr>
-                    {% endif %}
-                    <tr> <!--tr is a table row that holds data inside table cells (td)-->
-                        <td>Current Password</td>
-                        <td><input type="text" name="currentpassword" size="20"></td>
-                    </tr>
-                    <tr>
-                        <td>New Password</td>
-                        <td><input type="text" name="newpassword" size="20"></td>
-                    </tr>
-                    <tr>
-                        <td>Retype New Password</td>
-                        <td><input type="text" name="newpasswordretype" size="20"></td>
-                    </tr>
-                    <tr>
-                    <td></td>
-                    <td align = "center"><input type="submit" value="Login"
-                        name="submit"></td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-    </div>
+    <label for="Category">Choose a Category:</label>
+
+    <select name="Category" id="Category">
+        <ul>
+            {% for item in data %}
+                <li>{{item}}</li>
+            {% endfor %}
+        </ul>
+
+        {% for item in categories %}
+        <optgroup label="Swedish Cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+        </optgroup>
+        <optgroup label="German Cars">
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+        </optgroup>
+    </select>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

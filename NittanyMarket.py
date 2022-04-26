@@ -4,7 +4,7 @@ from populateDatabase import populate
 import hashlib
 
 # Populates Database with starting data
-populate()
+# populate()
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -82,6 +82,12 @@ def logout():
     session.pop("username", None)
     #we should instead display logout complete
     return redirect(url_for('index'))
+
+
+'''Shows the product listings page and adjusts features based on if a user is logged in or not and if they are a seller'''
+@app.route('/productlistings')
+def productlistings():
+    return render_template('productlistings.html')
 
 
 '''Fetch user profile data for display on the profile page'''
