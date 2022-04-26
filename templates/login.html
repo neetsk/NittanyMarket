@@ -8,6 +8,14 @@
     <title>Login</title> <!--This show up in the tab as the title of the webpage-->
 </head>
 <body>
+  <nav class="navbar navbar-default bg-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="productlistings">Product Listings</a>
+        </div>
+    </div>
+  </nav>
+
 
 <div class="index.html website">
   <form method="POST" action="/login">
@@ -25,6 +33,11 @@
         <td align = "center"><input type="submit" value="Login"
           name="submit"></td>
       </tr>
+      {% if error != None %}
+          <tr>
+            <td>{{error}}</td>
+          </tr>
+      {% endif %}
     </table>
   </form>
 </div>

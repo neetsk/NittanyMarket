@@ -13,11 +13,21 @@
     <nav class="navbar navbar-default bg-dark">
         <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand" href="productlistings">Product Listings</a>
-              <!--Add a check to see if a user is logged in-->
-              <a class="navbar-brand" href="profile">Profile</a>
-              <a class="navbar-brand" href="logout">Logout</a>
+                <a class="navbar-brand" href="productlistings">Product Listings</a>
+                {% if userIsSeller == True %}
+                    <a class="navbar-brand" href="publishproductlisting">Publish Product Listing</a>
+                {% endif %}
             </div>
+            {% if userLoggedIn == True %}
+            <div class="navbar-header-right">
+                <a style="text-align: right;" class="navbar-brand" href="profile">Profile</a>
+                <a style="text-align: right;" class="navbar-brand" href="logout">Logout</a>
+            </div>
+            {% else %}
+            <div class="navbar-header-right">
+                <a style="text-align: right;" class="navbar-brand" href="login">Login</a>
+            </div>
+            {% endif %}
         </div>
     </nav>
 
@@ -35,7 +45,7 @@
         <p><b>Seller Email:</b> {{product[0]}} <b>Listing_ID</b> {{product[1]}} <b>Category:</b> {{product[2]}} <b>Title:</b> {{product[3]}} 
             <b>Product Name:</b> {{product[4]}} <b>Product Description:</b> {{product[5]}} <b>Price:</b> {{product[6]}} <b>Quantity</b> {{product[7]}}</p>
         <form method="POST" action="/product">
-            <input type="submit" name="{{product[1]}}" value="View">
+            <button name="View" value="{{product[1]}}" type="submit">View</button>
         </form>
     {% endfor %}
 </div>

@@ -13,9 +13,21 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="productlistings">Product Listings</a>
-                <a class="navbar-brand" href="profile">Profile</a>
-                <a class="navbar-brand" href="logout">Logout</a>
+                {% if userIsSeller == True %}
+                    <a class="navbar-brand" href="publishproductlisting">Publish Product Listing</a>
+                {% endif %}
             </div>
+            {% if userLoggedIn == True %}
+            <div class="navbar-header-right">
+                <a style="text-align: right;" class="navbar-brand" href="profile">Profile</a>
+                <a style="text-align: right;" class="navbar-brand" href="logout">Logout</a>
+            </div>
+            {% else %}
+            <div class="navbar-header-right">
+                <a style="text-align: right;" class="navbar-brand" href="login">Login</a>
+            </div>
+            {% endif %}
+            
         </div>
     </nav>
 
@@ -28,11 +40,6 @@
             </ul>
             <form method="POST" action="/profile">
                 <table align = "center" border="0" width="300">
-                    {% if changePassAttempt == True %}
-                        <tr>
-                            <td>{{attemptSuccess}}</td>
-                        </tr>
-                    {% endif %}
                     <tr> <!--tr is a table row that holds data inside table cells (td)-->
                         <td>Current Password</td>
                         <td><input type="text" name="currentpassword" size="20"></td>
@@ -47,9 +54,14 @@
                     </tr>
                     <tr>
                     <td></td>
-                    <td align = "center"><input type="submit" value="Login"
+                    <td align = "center"><input type="submit" value="Change"
                         name="submit"></td>
                     </tr>
+                    {% if changePassAttempt == True %}
+                        <tr>
+                            <td>{{attemptSuccess}}</td>
+                        </tr>
+                    {% endif %}
                 </table>
             </form>
         </div>
