@@ -217,6 +217,23 @@ def product():
     return render_template('product.html', data=data, userLoggedIn=userLoggedIn, userIsSeller=userIsSeller)
 
 
+'''Allows a seller to post a product listing'''
+@app.route('/publishproductlisting', methods=['GET', 'POST'])
+def publishproductlisting():
+    error = None
+    # If we are not logged in, redirect to the login page
+    if "username" not in session:
+        return redirect(url_for('login'))
+    
+    # If we are somehow not a seller, redirect to the profile page
+    if 'seller' not in session:
+        return redirect(url_for('userProfile'))
+
+    
+
+    return True
+
+
 '''Fetch user profile data for display on the profile page'''
 def fetch_profile_data(user):
     connection = sql.connect('NittanyMarket.db')
