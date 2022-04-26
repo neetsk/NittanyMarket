@@ -119,6 +119,13 @@ def valid_login(user, password):
 def valid_password_change(currentPassword, newPassword, newPasswordRetype):
     connection = sql.connect('NittanyMarket.db')
 
+    if currentPassword == '':
+        return 'Enter the current password'
+    if newPassword == '':
+        return 'Enter the new password'
+    if newPasswordRetype == '':
+        return 'Reenter the new password'
+
     if newPassword != newPasswordRetype:
         return 'Passwords do not match'
     
